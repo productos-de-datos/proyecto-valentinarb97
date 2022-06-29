@@ -1,3 +1,10 @@
+"""
+Módulo de ingestión de datos.
+-------------------------------------------------------------------------------
+
+"""
+
+
 def ingest_data():
     """Ingeste los datos externos a la capa landing del data lake.
 
@@ -6,39 +13,23 @@ def ingest_data():
     descarga debe realizarse usando únicamente funciones de Python.
 
     """
-    import pandas as pd
-    import xlwt
-
-    def descargar_archivo(ruta, file_name, extension):
-
-        for año in file_name:
-            url_rute = ruta + '/' + año + extension + "?raw=true"
-            nombre_archivo = "data_lake/landing/" + \
-                '{}{}'.format(año, extension)
-            descarga = pd.read_excel(url_rute)
-            descarga.to_excel("data_lake/landing/{}{}".format(año,
-                                                              extension), index=None, header=True)
-        return
-
-    ruta = "https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/"
-    file_name1 = [str(año) for año in range(1995, 2016)]
-    file_name2 = [str(año) for año in range(2018, 2022)]
-
-    file_name_xlsx = file_name1 + file_name2
-    descargar_archivo(ruta, file_name_xlsx, ".xlsx")
-
-    file_name_xls = ["2016", "2017"]
-    descargar_archivo(ruta, file_name_xls, ".xls")
     #raise NotImplementedError("Implementar esta función")
-    # return
+    
+    import wget
+    from create_data_lake import get_project_root 
+    import os
+    url_xlsx = 'https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/{}.xlsx?raw=true'
+    url_xls = 'https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/{}.xls?raw=true'
+    xlsx =  list(range(1995, 2016)) + list(range(2018, 2022))
+    parent_dir = get_project_root()
 
-
-# ingest_data()
-
+    for i in range(1995, 2022):
+        if i == 2016 or i == 2017:
+            wget.download(url_xls.format(str(i)),out = os.path.join(parent_dir, "data_lake/landing"))
+        else: 
+            wget.download(url_xlsx.format(str(i)),out = os.path.join(parent_dir, "data_lake/landing"))
 
 if __name__ == "__main__":
-
     import doctest
-
-    doctest.testmod()
     ingest_data()
+    doctest.testmod()
