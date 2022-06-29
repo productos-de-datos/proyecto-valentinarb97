@@ -1,11 +1,12 @@
-#
-# Evaluador
-# ---------------------------------------------------------------------------------------
-#
-# test_01: pylint
-# test_02: pytest
-# test_03: doctest
-#
+'''
+#Evaluador
+#---------------------------------------------------------------------------------------
+test_01: pylint
+test_02: pytest
+test_03: doctest
+
+'''
+
 import os
 import sys
 
@@ -138,7 +139,7 @@ def test_10():
 def test_11():
     """Modelo creado"""
     os.system("make train_daily_model")
-    assert os.path.isfile("src/models/precios-diarios.pikle") is True
+    assert os.path.isfile("src/models/precios-diarios.pickle") is True
 
 
 def test_12():
@@ -163,4 +164,9 @@ test = {
     "12": test_12,
 }[sys.argv[1]]
 
-test()
+
+if __name__ == "__main__":
+
+    import doctest
+    doctest.testmod()
+    test()
