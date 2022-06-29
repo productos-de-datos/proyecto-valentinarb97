@@ -1,10 +1,3 @@
-"""
-Módulo de ingestión de datos.
--------------------------------------------------------------------------------
-
-"""
-
-
 def ingest_data():
     """Ingeste los datos externos a la capa landing del data lake.
 
@@ -13,23 +6,32 @@ def ingest_data():
     descarga debe realizarse usando únicamente funciones de Python.
 
     """
-    #raise NotImplementedError("Implementar esta función")
-    
     import wget
-    from create_data_lake import get_project_root 
     import os
-    url_xlsx = 'https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/{}.xlsx?raw=true'
-    url_xls = 'https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/{}.xls?raw=true'
-    xlsx =  list(range(1995, 2016)) + list(range(2018, 2022))
-    parent_dir = get_project_root()
 
-    for i in range(1995, 2022):
-        if i == 2016 or i == 2017:
-            wget.download(url_xls.format(str(i)),out = os.path.join(parent_dir, "data_lake/landing"))
-        else: 
-            wget.download(url_xlsx.format(str(i)),out = os.path.join(parent_dir, "data_lake/landing"))
+    os.chdir("data_lake/landing/")
+    for num in range(1995, 2022):
+        if num in range(2016, 2018):
+            wdir = 'https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/{}.xls?raw=true'.format(
+                num)
+            wget.download(wdir)
+        else:
+            wdir = 'https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/{}.xlsx?raw=true'.format(
+                num)
+            wget.download(wdir)
+    os.chdir('../../')
+    #raise NotImplementedError("Implementar esta función")
+
+
+def test_ruta_origen():
+    import os
+    assert set(os.listdir()) - set(['.git', '.github', '.gitignore',
+                                    '.vscode', 'data_lake', 'grader.py', 'Makefile', 'README.md', 'src']) == set()
+
 
 if __name__ == "__main__":
+
     import doctest
-    ingest_data()
+
     doctest.testmod()
+    ingest_data()
